@@ -11,15 +11,92 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    FloatingActionButton mAddNoteFab, mAddLinkFab;
+    ExtendedFloatingActionButton mMyFab;
+
+    TextView addNoteActionText, addLinkActionText;
+    Boolean isAllFabsVisible;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        mMyFab = findViewById(R.id.my_fab);
+
+        mAddNoteFab = findViewById(R.id.add_note_fab);
+        mAddLinkFab = findViewById(R.id.add_link_fab);
+
+        addNoteActionText = findViewById(R.id.add_note_action_text);
+        addLinkActionText = findViewById(R.id.add_link_action_text);
+
+
+        mAddNoteFab.setVisibility(View.GONE);
+        mAddLinkFab.setVisibility(View.GONE);
+        addNoteActionText.setVisibility(View.GONE);
+        addLinkActionText.setVisibility(View.GONE);
+
+        isAllFabsVisible = false;
+
+        mMyFab.shrink();
+
+
+        mMyFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!isAllFabsVisible) {
+
+                            mAddNoteFab.show();
+                            mAddLinkFab.show();
+                            addNoteActionText.setVisibility(View.VISIBLE);
+                            addLinkActionText.setVisibility(View.VISIBLE);
+
+                            mMyFab.extend();
+
+                            isAllFabsVisible = true;
+                        } else {
+                            mAddNoteFab.hide();
+                            mAddLinkFab.hide();
+                            addNoteActionText.setVisibility(View.GONE);
+                            addLinkActionText.setVisibility(View.GONE);
+
+                            mMyFab.shrink();
+
+                            isAllFabsVisible = false;
+                        }
+                    }
+                });
+
+
+        mAddNoteFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MainActivity.this, AddNote.class);
+                        startActivity(intent);
+                    }
+                });
+
+        mAddLinkFab.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(MainActivity.this, "Alarm Added", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
         ArrayList<String> myData = new ArrayList<String>();
 
@@ -33,11 +110,11 @@ public class MainActivity extends AppCompatActivity {
         //Rearrange the Ids
         Cursor c1 = myDatabase.rawQuery("SELECT * FROM notes", null);
         int id = 1;
-        if(c1.moveToFirst()){
-            do{
-                myDatabase.execSQL("UPDATE notes SET Id = "+id+" WHERE Id = "+c1.getInt(0));
+        if (c1.moveToFirst()) {
+            do {
+                myDatabase.execSQL("UPDATE notes SET Id = " + id + " WHERE Id = " + c1.getInt(0));
                 id++;
-            }while(c1.moveToNext());
+            } while (c1.moveToNext());
         }
         c1.close();
 

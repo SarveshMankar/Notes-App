@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
+    tools:ignore="HardcodedText"
     >
 
     <TextView
@@ -31,19 +32,91 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+
+    <!--This will be the parent Floating Action Button-->
+    <!--After the implementation the Floating Action Button at
+         the bottom right corner as we have constrained accordingly-->
+    <!--After clicking the above button the
+        following two buttons will pop up.
+         So this button is considered as parent FAB-->
+    <!--After opening the application it looks like regular
+        FAB but after user clicks it, it extends-->
+    <!--This functionality has been handled in the MainActivity.java-->
+
+    <!--Floating action button for add alarm-->
+    <!--Make sure that you are constraining this
+        button to the parent button-->
+    <!--Make sure to add backgroundTint attribute to match
+         the entire application color-->
+    <!--because after changing the base application theme the color
+         of the FAB is set Blue as default-->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/my_fab"
+        android:layout_width="106dp"
+        android:layout_height="53dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/teal_200"
+        android:text="Add"
+        app:icon="@drawable/ic_baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/add_note_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="330dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="41dp"
-        android:clickable="true"
-        android:onClick="addNewNote"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/teal_200"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/my_fab"
+        app:layout_constraintEnd_toEndOf="@+id/my_fab"
+        app:srcCompat="@drawable/ic_baseline_note_24" />
+
+    <!--Action name text for the add alarm button-->
+    <!--Make sure that you are constraining this
+        Text to the add Alarm FAB button-->
+    <TextView
+        android:id="@+id/add_note_action_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Plain Note"
+        app:layout_constraintBottom_toBottomOf="@+id/add_note_fab"
+        app:layout_constraintEnd_toStartOf="@+id/add_note_fab"
+        app:layout_constraintTop_toTopOf="@+id/add_note_fab" />
+
+    <!--Floating action button for add person-->
+    <!--Make sure that you are constraining this button
+        to the add Alarm FAB button-->
+    <!--Make sure to add backgroundTint attribute to match
+         the entire application color-->
+    <!--because after changing the base application theme
+         the color of the FAB is set Blue as default-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_link_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/teal_200"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/add_note_fab"
+        app:layout_constraintEnd_toEndOf="@+id/add_note_fab"
+        app:layout_constraintStart_toStartOf="@+id/add_note_fab"
+        app:srcCompat="@drawable/ic_baseline_insert_link_24" />
+
+    <!--Action name text for the add person button-->
+    <!--Make sure that you are constraining this Text
+         to the add Person FAB button-->
+    <TextView
+        android:id="@+id/add_link_action_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Hyperlink"
+        app:layout_constraintBottom_toBottomOf="@+id/add_link_fab"
+        app:layout_constraintEnd_toStartOf="@+id/add_link_fab"
+        app:layout_constraintTop_toTopOf="@+id/add_link_fab" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

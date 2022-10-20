@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class AddNote extends AppCompatActivity {
@@ -35,6 +36,9 @@ public class AddNote extends AppCompatActivity {
 
         if (noteId != 0) {
             updateNote = true;
+
+            Button updateButton = findViewById(R.id.button);
+            updateButton.setText("Update");
 
             Cursor c = myDatabase.rawQuery("SELECT * from notes where Id=" + noteId, null);
             idIndex = c.getColumnIndex("Id");
