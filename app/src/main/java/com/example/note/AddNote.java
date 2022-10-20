@@ -1,0 +1,102 @@
+package com.example.note;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ContentValues;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+public class AddNote extends AppCompatActivity {
+
+    public boolean updateNote = false;
+    public SQLiteDatabase myDatabase;
+    public int idIndex;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_note);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add Note");
+
+        myDatabase = openOrCreateDatabase("data", MODE_PRIVATE, null);
+
+        Intent gotIntent = getIntent();
+        int noteId = gotIntent.getIntExtra("noteId", -1) + 1;
+
+        if (noteId != 0) {
+            updateNote = true;
+
+            Cursor c = myDatabase.rawQuery("SELECT * from notes where Id=" + noteId, null);
+            idIndex = c.getColumnIndex("Id");
+            int notesTitleIndex = c.getColumnIndex("notesTitle");
+            int notesDataIndex = c.getColumnIndex("notesData");
+
+            c.moveToFirst();
+            if (c.moveToFirst()) {
+                do {
+                    //Log.i("Id", Integer.toString(c.getInt(idIndex)));
+                    //Log.i("Title", c.getString(notesTitleIndex));
+                    //Log.i("Data", c.getString(notesDataIndex));
+
+                    TextView noteTitle = findViewById(R.id.noteTitle);
+                    noteTitle.setText(c.getString(notesTitleIndex));
+
+                    TextView noteData = findViewById(R.id.noteData);
+                    noteData.setText(c.getString(notesDataIndex));
+
+                } while (c.moveToNext());
+            }
+            c.close();
+
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void saveNote(View view) {
+
+        TextView noteTitle = findViewById(R.id.noteTitle);
+        String title = noteTitle.getText().toString();
+
+        TextView noteData = findViewById(R.id.noteData);
+        String data = noteData.getText().toString();
+
+        if (updateNote) {
+
+            //Update the Data
+            ContentValues cv = new ContentValues();
+            cv.put("notesTitle", title);
+            cv.put("notesData", data);
+            myDatabase.update("notes", cv, "Id=" + (idIndex+1), null);
+
+            //Update the data without cv
+            //myDatabase.execSQL("UPDATE notes SET notesTitle = '"+title+"', notesData = '"+data+"' WHERE Id = "+(idIndex+1));
+
+            //Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+        } else {
+            myDatabase.execSQL("INSERT INTO notes (notesTitle, notesData) VALUES ('" + title + "' , '" + data + "')");
+        }
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+}
