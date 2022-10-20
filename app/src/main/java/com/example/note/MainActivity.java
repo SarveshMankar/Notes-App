@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     TextView addNoteActionText, addLinkActionText;
     Boolean isAllFabsVisible;
 
+    public SQLiteDatabase myDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,16 +95,17 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(MainActivity.this, "Alarm Added", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, AddLinkActivity.class);
+                        startActivity(intent);
                     }
                 });
 
 
         ArrayList<String> myData = new ArrayList<String>();
 
-        SQLiteDatabase myDatabase = openOrCreateDatabase("data", MODE_PRIVATE, null);
+        myDatabase = openOrCreateDatabase("data", MODE_PRIVATE, null);
 
-        myDatabase.execSQL("CREATE TABLE IF NOT EXISTS notes (Id INTEGER PRIMARY KEY, notesTitle VARCHAR, notesData VARCHAR)");
+        myDatabase.execSQL("CREATE TABLE IF NOT EXISTS notes (Id INTEGER PRIMARY KEY, notesTitle VARCHAR, notesData VARCHAR, notesType VARCHAR)");
 
         //myDatabase.execSQL("INSERT INTO notes (notesTitle, notesData) VALUES ('Title 1', 'Data 1')");
         //myDatabase.execSQL("DELETE from notes");
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         int idIndex = c.getColumnIndex("Id");
         int notesTitleIndex = c.getColumnIndex("notesTitle");
         int notesDataIndex = c.getColumnIndex("notesData");
+        int notesTypeIndex = c.getColumnIndex("notesType");
 
         c.moveToFirst();
         if (c.moveToFirst()) {
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Id", Integer.toString(c.getInt(idIndex)));
                 Log.i("Title", c.getString(notesTitleIndex));
                 Log.i("Data", c.getString(notesDataIndex));
+                Log.i("Type", c.getString(notesTypeIndex));
 
                 myData.add(c.getString(notesTitleIndex));
             } while (c.moveToNext());
@@ -145,9 +150,36 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), AddNote.class);
-                intent.putExtra("noteId", i);
-                startActivity(intent);
+
+                Cursor c2 = myDatabase.rawQuery("SELECT * FROM notes WHERE Id=" + (i+1), null);
+
+                int idIndex = c2.getColumnIndex("Id");
+                int notesTitleIndex = c2.getColumnIndex("notesTitle");
+                int notesDataIndex = c2.getColumnIndex("notesData");
+                int notesTypeIndex = c2.getColumnIndex("notesType");
+
+                String notesType = "";
+
+                c2.moveToFirst();
+                if (c2.moveToFirst()) {
+                    do {
+                        notesType = c2.getString(notesTypeIndex);
+                    } while (c2.moveToNext());
+                }
+                c2.close();
+
+                //Toast.makeText(MainActivity.this, notesType, Toast.LENGTH_SHORT).show();
+
+                if(notesType.equals("plain")){
+                    Intent intent = new Intent(getApplicationContext(), AddNote.class);
+                    intent.putExtra("noteId", i);
+                    startActivity(intent);
+                }else if(notesType.equals("link")){
+                    Intent intent = new Intent(getApplicationContext(), AddLinkActivity.class);
+                    intent.putExtra("noteId", i);
+                    startActivity(intent);
+                }
+
             }
         });
     }
