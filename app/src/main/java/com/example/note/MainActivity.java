@@ -1,7 +1,9 @@
 package com.example.note;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        // Floating Action Button
         mMyFab = findViewById(R.id.my_fab);
 
         mAddNoteFab = findViewById(R.id.add_note_fab);
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
+        //Opening Add Plain Text Note Activity
         mAddNoteFab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -91,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+        //Opening Add Link Note Activity
         mAddLinkFab.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -101,14 +105,12 @@ public class MainActivity extends AppCompatActivity {
                 });
 
 
+        //Data for showing in ListView
         ArrayList<String> myData = new ArrayList<String>();
 
         myDatabase = openOrCreateDatabase("data", MODE_PRIVATE, null);
 
         myDatabase.execSQL("CREATE TABLE IF NOT EXISTS notes (Id INTEGER PRIMARY KEY, notesTitle VARCHAR, notesData VARCHAR, notesType VARCHAR)");
-
-        //myDatabase.execSQL("INSERT INTO notes (notesTitle, notesData) VALUES ('Title 1', 'Data 1')");
-        //myDatabase.execSQL("DELETE from notes");
 
         //Rearrange the Ids
         Cursor c1 = myDatabase.rawQuery("SELECT * FROM notes", null);
@@ -121,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
         }
         c1.close();
 
+        //Getting data from database
         Cursor c = myDatabase.rawQuery("SELECT * FROM notes", null);
 
         int idIndex = c.getColumnIndex("Id");
@@ -147,11 +150,12 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, myData);
         listView.setAdapter(arrayAdapter);
 
+        //Opening the Update Activity
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                Cursor c2 = myDatabase.rawQuery("SELECT * FROM notes WHERE Id=" + (i+1), null);
+                Cursor c2 = myDatabase.rawQuery("SELECT * FROM notes WHERE Id=" + (i + 1), null);
 
                 int idIndex = c2.getColumnIndex("Id");
                 int notesTitleIndex = c2.getColumnIndex("notesTitle");
@@ -168,13 +172,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 c2.close();
 
-                //Toast.makeText(MainActivity.this, notesType, Toast.LENGTH_SHORT).show();
-
-                if(notesType.equals("plain")){
+                if (notesType.equals("plain")) {
                     Intent intent = new Intent(getApplicationContext(), AddNote.class);
                     intent.putExtra("noteId", i);
                     startActivity(intent);
-                }else if(notesType.equals("link")){
+                } else if (notesType.equals("link")) {
                     Intent intent = new Intent(getApplicationContext(), AddLinkActivity.class);
                     intent.putExtra("noteId", i);
                     startActivity(intent);
@@ -182,10 +184,30 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
+        //Deleting the note
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Are you sure?")
+                        .setMessage("Do you want to delete this note?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int ij) {
+                                myDatabase.execSQL("DELETE FROM notes WHERE Id = " + (i + 1));
+                                Toast.makeText(MainActivity.this, "Note deleted", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
+                return true;
+            }
+        });
     }
 
-    public void addNewNote(View view) {
-        Intent intent = new Intent(this, AddNote.class);
-        startActivity(intent);
-    }
 }
