@@ -115,4 +115,15 @@ public class AddLinkActivity extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    public void openWebView(View view){
+        TextView noteData = findViewById(R.id.noteData);
+        String url = noteData.getText().toString();
+
+        Intent intent = new Intent(this, ShowLinkActivity.class);
+        intent.putExtra("url", url);
+
+        startActivity(intent);
+
+    }
 }
