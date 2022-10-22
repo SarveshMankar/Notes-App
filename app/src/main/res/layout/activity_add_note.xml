@@ -6,28 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".AddNote">
 
-    <EditText
-        android:id="@+id/noteTitle"
-        android:layout_width="363dp"
-        android:layout_height="66dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="24dp"
-        android:ems="10"
-        android:hint="Title"
-        android:inputType="textPersonName"
-        android:textSize="24sp"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="159dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="164dp"
+        android:layout_marginBottom="72dp"
+        android:onClick="saveNote"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/noteData" />
 
     <EditText
         android:id="@+id/noteData"
-        android:layout_width="358dp"
-        android:layout_height="463dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="33dp"
-        android:layout_marginEnd="24dp"
+        android:layout_width="334dp"
+        android:layout_height="441dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="27dp"
         android:ems="10"
         android:gravity="start|top"
         android:hint="Type your Notes!"
@@ -36,18 +37,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noteTitle" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="159dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="164dp"
-        android:layout_marginBottom="45dp"
-        android:onClick="saveNote"
-        android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <EditText
+        android:id="@+id/noteTitle"
+        android:layout_width="328dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="42dp"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteData" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
