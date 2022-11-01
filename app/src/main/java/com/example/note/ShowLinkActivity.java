@@ -15,7 +15,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class ShowLinkActivity extends AppCompatActivity {
+
+    public int index = 0;
+    public int total = 0;
+    public ArrayList<String> myURLs;
+    public WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,14 +36,23 @@ public class ShowLinkActivity extends AppCompatActivity {
         Intent gotIntent = getIntent();
         String url = gotIntent.getStringExtra("url");
 
-        //Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
+        String[] urls = url.split(System.lineSeparator());
 
-        WebView webView = findViewById(R.id.webView);
+        myURLs = new ArrayList<String>();
+
+        for (String u : urls) {
+            if (u.contains("http")) {
+                myURLs.add(u);
+            }
+        }
+        total = myURLs.size();
+
+        webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl(url);
+        webView.loadUrl(myURLs.get(0));
 
-
+        Log.i("My URL", myURLs.toString());
     }
 
     @Override
@@ -53,26 +69,48 @@ public class ShowLinkActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
-            case R.id.next:
-                Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show();
+
+            case R.id.start:
+                //Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show();
+                webView = findViewById(R.id.webView);
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.setWebViewClient(new WebViewClient());
+                webView.loadUrl(myURLs.get(0));
                 return true;
+
+            case R.id.end:
+                //Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show();
+                webView = findViewById(R.id.webView);
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.setWebViewClient(new WebViewClient());
+                webView.loadUrl(myURLs.get(total - 1));
+                return true;
+
+            case R.id.next:
+                //Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show();
+                if (index < total - 1) {
+                    index++;
+                    webView = findViewById(R.id.webView);
+                    webView.getSettings().setJavaScriptEnabled(true);
+                    webView.setWebViewClient(new WebViewClient());
+                    webView.loadUrl(myURLs.get(index));
+                }
+                return true;
+
             case R.id.previous:
-                Toast.makeText(this, "Previous", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Previous", Toast.LENGTH_SHORT).show();
+                if (index > 0) {
+                    index--;
+                    webView = findViewById(R.id.webView);
+                    webView.getSettings().setJavaScriptEnabled(true);
+                    webView.setWebViewClient(new WebViewClient());
+                    webView.loadUrl(myURLs.get(index));
+                }
                 return true;
         }
-
-
 
         return super.onOptionsItemSelected(item);
     }
 
 
-    
-    public void nextLink(View view){
-        Toast.makeText(this, "Next", Toast.LENGTH_SHORT).show();
-    }
-    
-    public void previousLink(View view){
-        Toast.makeText(this, "Previous", Toast.LENGTH_SHORT).show();
-    }
 }
