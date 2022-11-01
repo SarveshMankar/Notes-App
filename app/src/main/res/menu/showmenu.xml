@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+
+    <item
+        android:id="@+id/overflowMenu"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        android:tint="@android:color/white"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/next"
+                android:icon="@drawable/ic_baseline_chevron_right_24"
+                android:title="Next" />
+            <item
+                android:id="@+id/previous"
+                android:icon="@drawable/ic_baseline_chevron_left_24"
+                android:title="Previous"
+                />
+        </menu>
+    </item>
+
+</menu>
